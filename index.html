@@ -1,0 +1,151 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Address Book</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+        <style>
+            body {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                min-height: 100vh;
+                padding: 20px 0;
+            }
+            .card {
+                border: none;
+                border-radius: 12px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2) !important;
+            }
+            h2 {
+                color: #333;
+                font-weight: 600;
+            }
+            h4 {
+                color: #333;
+                font-weight: 600;
+            }
+            .form-control {
+                border-radius: 8px;
+                border: 1px solid #ddd;
+                padding: 12px;
+                transition: all 0.3s;
+            }
+            .form-control:focus {
+                border-color: #667eea;
+                box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+            }
+            .btn-primary {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                border: none;
+                border-radius: 8px;
+                font-weight: 500;
+                transition: transform 0.2s;
+            }
+            .btn-primary:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            }
+            table {
+                border-radius: 8px;
+                overflow: hidden;
+            }
+            .table-dark {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container py-5">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="card p-4 mb-4">
+                        <h2 class="text-center mb-4">📇 Address Book</h2>
+                        <div class="row g-3">
+                            <div class="col-md-12">
+                                <input type="text" id="name" class="form-control" placeholder="Name">
+                            </div>
+                            <div class="col-md-12">
+                                <input type="text" id="phone" class="form-control" placeholder="Phone Number">
+                            </div>
+                            <div class="col-md-12">
+                                <input type="text" id="email" class="form-control" placeholder="Email Address">
+                            </div>
+                            <div class="col-md-12">
+                                <input type="text" id="address" class="form-control" placeholder="Address">
+                            </div>
+                            <div class="col">
+                                <button class="btn btn-primary w-100" onclick="addContact()">Add Contact</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>   
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="card p-3">
+                        <h4 class="text-center mb-3">👥 Contacts</h4>
+                        <table class="table table-bordered table-hover text-center">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Phone</th>
+                                    <th>Email</th>
+                                    <th>Address</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="contactListTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            let contacts = JSON.parse(localStorage.getItem('contacts')) || [];
+            
+            function addContact() {
+                let name = document.getElementById('name').value;
+                let phone = document.getElementById('phone').value;
+                let email = document.getElementById('email').value;
+                let address = document.getElementById('address').value;
+
+                if (name && phone && email && address) {
+                    contacts.push({ name, phone, email, address });
+                    localStorage.setItem('contacts', JSON.stringify(contacts));
+                    displayContacts();
+                    document.getElementById('name').value = '';
+                    document.getElementById('phone').value = '';
+                    document.getElementById('email').value = '';
+                    document.getElementById('address').value = '';
+                }
+            }
+
+            function displayContacts() {
+                let list = document.getElementById('contactListTableBody');
+                list.innerHTML = '';
+                contacts.forEach((contact,index) => {
+                    list.innerHTML += `
+                        <tr>
+                            <td>${contact.name}</td>
+                            <td>${contact.phone}</td>
+                            <td>${contact.email}</td>
+                            <td>${contact.address}</td>
+                            <td><button class="btn btn-danger btn-sm" onclick="deleteContact('${index}')">Delete</button></td>
+                        </tr>
+                    `;
+                });
+            }
+
+            function deleteContact(index) {
+                contacts.splice(index, 1);
+                localStorage.setItem('contacts', JSON.stringify(contacts));
+                displayContacts();
+            }
+        </script>
+    </body>
+</html>
